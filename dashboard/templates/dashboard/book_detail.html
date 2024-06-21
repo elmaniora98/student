@@ -1,0 +1,37 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class='container mt-5'>
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid" src="{{ books.thumbnail }}" alt="Book thumbnail">
+        </div>
+        <div class="col-md-8">
+            <h2 class="text-primary">{{ books.title }}</h2>
+            {% if books.subtitle %}
+            <h4 class="text-muted">{{ books.subtitle }}</h4>
+            {% endif %}
+            <p>{{ books.description }}</p>
+            {% if books.categories %}
+            <p><strong>Category: </strong>
+                {% for category in books.categories %}
+                <span class="badge badge-primary">{{ category }}</span>
+                {% endfor %}
+            </p>
+            {% endif %}
+            {% if books.count %}
+            <p><strong>Pages: </strong>{{ books.count }}</p>
+            {% endif %}
+            {% if books.rating %}
+            <p><strong>Rating: </strong>{{ books.rating }}</p>
+            {% endif %}
+            <a href="{{ books.preview }}" target="_blank" class="btn btn-outline-primary">Preview</a>
+        </div>
+    </div>
+</section>
+{% endblock content %}

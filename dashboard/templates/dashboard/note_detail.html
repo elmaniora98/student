@@ -1,0 +1,63 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="display-4">Détails de la Note</h2>
+
+    <!-- Section principale -->
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span class="font-weight-bold">{{ note.title }}</span>
+            <div class="d-flex">
+                <!-- Bouton pour éditer la note -->
+                <a href="{% url 'edit-note' note.id %}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <!-- Bouton pour télécharger la note -->
+                <a href="{% url 'download-note-as-text' note.id %}" class="btn btn-outline-success me-2">
+                    <i class="fas fa-download"></i> Télécharger
+                </a>
+                <!-- Bouton pour supprimer la note -->
+                <a href="{% url 'delete-note' note.id %}" class="btn btn-outline-danger">
+                    <i class="fas fa-trash"></i> Supprimer
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <h3 class="card-title">Description</h3>
+            <p>{{ note.description }}</p>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <span>
+                Créé le : {{ note.created_at|date:"d/m/Y H:i" }}
+            </span>
+            <span>
+                Dernière modification : {{ note.updated_at|date:"d/m/Y H:i" }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Boutons de partage -->
+    <div class="mt-4 text-center">
+        <h4>Partager cette note</h4>
+        <div class="d-flex justify-content-center">
+            <!-- Partager sur WhatsApp -->
+            <a href="https://wa.me/?text={{ note.description|slice:'0:100' }}..." class="btn btn-outline-success me-2" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <!-- Partager sur Gmail -->
+            <a href="mailto:?subject={{ note.title }}&body={{ note.description|slice:'0:100' }}" class="btn btn-outline-danger me-2">
+                <i la fas fa-envelope"></i> Gmail
+            </a>
+            <!-- Partager sur Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-outline-primary" target="_blank">
+                <i la fab fa-facebook"></i> Facebook
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

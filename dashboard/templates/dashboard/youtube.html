@@ -1,0 +1,213 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+
+    body {
+        background-color: #121212;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+    }
+    
+    .card {
+        background-color: #1E1E1E;
+        border: none;
+    }
+    
+    .card-title, .card-text, .card-footer {
+        color: #FFFFFF;
+    }
+    
+    .btn-outline-secondary {
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #FFFFFF;
+        color: #000000;
+    }
+    
+    #video-player {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+    }
+    
+    #video-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    #search-history {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+        .video-card {
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .video-thumbnail {
+            width: 100%;
+            transition: transform 0.3s;
+        }
+    
+        .video-card:hover .video-thumbnail {
+            transform: scale(1.05);
+        }
+    
+        .video-card video {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    
+        .video-card:hover video {
+            display: block;
+        }
+</style>
+<section class='text-center container my-5'>
+    <h2>Rechercher des vidéos sur YouTube</h2>
+    <p>Cherchez des vidéos et sélectionnez-en une pour la lire directement sur cette page.</p>
+    <form action="" method="post" id="youtube-search-form">
+        {% csrf_token %}
+        <input type="text" id="id_text" name="text" class="form-control" placeholder="Entrez votre recherche...">
+        <select name="language" class="form-control my-2">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+        </select>
+        <input class="btn btn-danger my-3" type="submit" value="Rechercher">
+    </form>
+</section>
+
+<section class='container my-5'>
+    <div id="video-player" class="embed-responsive embed-responsive-16by9 mb-5" style="display: none;">
+        <iframe id="video-frame" class="embed-responsive-item" src="" allowfullscreen></iframe>
+    </div>
+</section>
+
+<section class='container'>
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <h4>Historique des recherches</h4>
+            <ul class="list-group" id="search-history">
+                {% for history in search_history %}
+                    <li class="list-group-item">
+                        <a href="#" class="search-history-item">{{ history.query }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="row" id="video-results">
+                {% for result in results %}
+                <div class="col-md-4 mb-4">
+                    <div class="card video-card h-100" data-video-url="{{ result.link }}" data-thumbnail="{{ result.thumbnail }}">
+                        <img class="card-img-top video-thumbnail" src="{{ result.thumbnail }}" alt="{{ result.title }}">
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-outline-secondary add-favorite" data-video-id="{{ result.id }}"><i class="fas fa-heart"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary download-video" data-video-id="{{ result.id }}"><i class="fas fa-download"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary share-video" data-video-link="{{ result.link }}" data-video-title="{{ result.title }}" data-video-thumbnail="{{ result.thumbnail }}" data-video-description="{{ result.description }}"><i class="fas fa-share"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<section class='container my-5'>
+    <h3>Vidéos populaires</h3>
+    <div class="row" id="popular-videos">
+        {% for video in popular_videos %}
+        <div class="col-md-4 mb-4">
+            <div class="card video-card h-100" data-video-url="{{ video.link }}" data-thumbnail="{{ video.thumbnail }}">
+                <img class="card-img-top video-thumbnail" src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                <video class="d-none" controls>
+                    <source src="{{ video.link }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-outline-secondary add-favorite" data-video-id="{{ video.id }}"><i class="fas fa-heart"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary download-video" data-video-id="{{ video.id }}"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary share-video" data-video-link="{{ video.link }}" data-video-title="{{ video.title }}" data-video-thumbnail="{{ video.thumbnail }}" data-video-description="{{ video.description }}"><i class="fas fa-share"></i></button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class='container my-5'>
+    <h3>Téléchargements</h3>
+    <div class="row" id="offline-videos">
+        {% for video in offline_videos %}
+        <div class="col-md-4 mb-4">
+            <div class="card video-card h-100">
+                <video class="card-img-top" controls>
+                    <source src="{{ video.file_path }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+                <div class="card-body">
+                    <h5 class="card-title">{{ video.title }}</h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    
+    document.querySelectorAll('.video-card').forEach(function(card) {
+        // Ajoutez un gestionnaire d'événements click pour agrandir le cardview
+        card.addEventListener('click', function() {
+            var videoUrl = this.getAttribute('data-video-url');
+            // Chargez la vidéo dans le lecteur en grand
+            loadVideo(videoUrl);
+        });
+    });
+    
+    // Fonction pour charger une vidéo dans le lecteur en grand
+    function loadVideo(url) {
+        const videoPlayer = document.getElementById('video-player');
+        const videoFrame = document.getElementById('video-frame');
+        videoFrame.src = url.replace("watch?v=", "embed/");
+        videoPlayer.style.display = 'block';
+        window.scrollTo(0, videoPlayer.offsetTop);
+    }
+    
+    // Ajoutez ce script pour activer la lecture au survol pour les vidéos populaires
+    document.querySelectorAll('.video-card').forEach(function(card) {
+        card.addEventListener('mouseenter', function() {
+            var video = this.querySelector('video');
+            if (video) {
+                video.classList.remove('d-none'); // Afficher la vidéo
+                video.play();
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            var video = this.querySelector('video');
+            if (video) {
+                video.pause();
+                video.classList.add('d-none'); // Masquer la vidéo lorsque la souris quitte
+            }
+        });
+    });
+</script>
+{% endblock content %}

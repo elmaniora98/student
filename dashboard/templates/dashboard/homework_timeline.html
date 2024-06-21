@@ -1,0 +1,55 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="display-4">Timeline de Collaboration pour {{ homework.title }}</h2>
+
+    <!-- Liste des événements de la timeline -->
+    <div class="timeline">
+        {% for event in timeline_events %}
+        <div class="timeline-event">
+            <div class="timeline-icon">
+                <!-- Icône pour indiquer le type d'événement -->
+            </div>
+            <div class="timeline-content">
+                <h5>{{ event.timestamp|date:"d/m/Y H:i" }} - {{ event.user.username }}</h5>
+                <p>{{ event.description }}</p>
+                
+                <!-- Réactions -->
+                <div class="reactions">
+                    {% for emoji, count in event.reactions.items %}
+                    <span>{{ emoji }} x{{ count }}</span>
+                    {% endfor %}
+                </div>
+                
+                <!-- Mentions -->
+                {% if event.mentions.all %}
+                <div class="mentions">
+                    <strong>Mentions:</strong>
+                    {% for mention in event.mentions.all %}
+                    <span>{{ mention.username }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Formulaire pour ajouter un nouvel événement à la timeline -->
+    <div class="mt-5">
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="description" class="form-control" placeholder="Ajouter un commentaire..." rows="3"></textarea>
+            <button class="btn btn-outline-info mt-3" type="submit">Ajouter à la Timeline</button>
+        </form>
+    </div>
+
+    <!-- Retour à la liste des devoirs -->
+    <div class="mt-5 text-center">
+        <a href="{% url 'homework' %}" class="btn btn-outline-primary">Retour aux Devoirs</a>
+    </div>
+
+</div>
+
+{% endblock %}

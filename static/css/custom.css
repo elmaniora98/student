@@ -1,0 +1,61 @@
+/* custom.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+h2 {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+p.lead {
+    color: #7f8c8d;
+}
+
+.form-inline .input-group {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.input-group .form-control {
+    border-radius: 0;
+}
+
+.input-group-append .btn {
+    border-radius: 0;
+}
+
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    color: #2980b9;
+    font-weight: 700;
+}
+
+.card-subtitle {
+    color: #7f8c8d;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #34495e;
+}
+
+.badge-primary {
+    background-color: #3498db;
+}
+
+.text-primary {
+    color: #2980b9 !important;
+}
+
+.text-muted {
+    color: #95a5a6 !important;
+}

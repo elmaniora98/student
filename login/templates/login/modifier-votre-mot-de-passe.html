@@ -1,0 +1,31 @@
+{% extends "login/base.html" %}
+
+{% block title %}
+    Modifier votre mot de passe
+{% endblock %}
+
+{% block head %}
+Lustick LOGIN APP
+{% endblock %}
+
+{% block content %}
+    <h2 style="display: flex; align-items: center;">Modifier votre mot de passe</h2><br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputMot_de_passe">Mot de passe actuel</label>
+            {{ form.mot_de_passe }}
+        </div>
+        <div class="form-group">
+            <label for="inputNouveaumot_de_passe">Nouveau mot de passe</label>
+            {{ form.nouveau_mot_de_passe }}
+        </div>
+        <div class="form-group">
+            <label for="inputConfirmation_du_nouveau_mot_de_passe">Confirmation du nouveau mot de passe</label>
+            {{ form.confirmation_du_nouveau_mot_de_passe }}
+        </div>
+
+        <input type="submit" name="modifier" class="btn btn-primary btn-block" value="Modifier">
+        <a href="{% url 'log:modifinfos' %}" class="btn btn-warning btn-block">Retour</a>
+    </form>
+{% endblock %}

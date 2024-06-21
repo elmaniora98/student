@@ -1,0 +1,317 @@
+
+
+{% block title%}
+    Se Connecter
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!--Login-->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .login-area {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(15px);
+        padding: 20px;
+        width: 100%;
+        max-width: 450px;
+        animation: fadeIn 1s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    
+    .login-box form {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 450px;
+        animation: slideIn 1s ease-in-out;
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(50px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .login-form-head {
+        text-align: center;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        padding: 40px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        color: #fff;
+    }
+    
+    .login-form-head h4 {
+        font-weight: 700;
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 24px;
+    }
+    
+    .login-form-head p {
+        margin: 10px 0 0;
+        font-size: 14px;
+        color: #ddd;
+    }
+    
+    .login-form-body {
+        padding: 30px;
+    }
+    
+    .form-gp {
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .form-gp label {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        color: #aaa;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        font-size: 14px;
+    }
+    
+    .form-gp input {
+        width: 100%;
+        padding: 12px 10px;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        background: transparent;
+        transition: border-color 0.3s ease;
+        font-size: 16px;
+        color: #333;
+    }
+    
+    .form-gp input:focus {
+        outline: none;
+        border-color: #6a11cb;
+    }
+    
+    .form-gp input:focus + label, 
+    .form-gp input:not(:placeholder-shown) + label {
+        top: -10px;
+        font-size: 12px;
+        color: #6a11cb;
+    }
+    
+    .form-gp input::placeholder {
+        color: transparent;
+    }
+    
+    .form-gp i {
+        position: absolute;
+        right: 10px;
+        top: 14px;
+        color: #6a11cb;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+    
+    .form-gp.has-error input {
+        border-color: #ff4d4d;
+    }
+    
+    .form-gp.has-error label, 
+    .form-gp.has-error input:focus + label {
+        color: #ff4d4d;
+    }
+    
+    .form-gp.has-error i {
+        color: #ff4d4d;
+    }
+    
+    .rmber-area {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+    
+    .submit-btn-area {
+        text-align: center;
+    }
+    
+    .submit-btn-area button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .submit-btn-area button:hover {
+        background: linear-gradient(to right, #2575fc, #6a11cb);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .submit-btn-area button i {
+        margin-left: 10px;
+        transition: margin-left 0.3s ease;
+    }
+    
+    .submit-btn-area button:hover i {
+        margin-left: 15px;
+    }
+    
+    .login-other a {
+        display: block;
+        width: 100%;
+        max-width: 250px;
+        padding: 12px;
+        border-radius: 50px;
+        text-align: center;
+        text-transform: capitalize;
+        font-weight: 700;
+        font-size: 14px;
+        margin: 10px auto;
+        transition: all 0.3s ease;
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .login-other a i {
+        margin-left: 5px;
+    }
+    
+    .login-other a.fb-login {
+        background: #4267B2;
+    }
+    
+    .login-other a.fb-login:hover {
+        box-shadow: 0 5px 15px rgba(66, 103, 178, 0.6);
+    }
+    
+    .login-other a.google-login {
+        background: #DB4437;
+    }
+    
+    .login-other a.google-login:hover {
+        box-shadow: 0 5px 15px rgba(219, 68, 55, 0.6);
+    }
+    
+    .form-footer a {
+        margin-left: 5px;
+        color: #6a11cb;
+        transition: color 0.3s ease;
+    }
+    
+    .form-footer a:hover {
+        color: #2575fc;
+    }
+
+    /* Additional enhancements */
+    .login-bg {
+        background: url('https://source.unsplash.com/1600x900/?nature') center/cover no-repeat;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .login-bg:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        height: 100%;
+        width: 100%;
+        background: rgba(39, 39, 39, 0.7);
+    }
+</style>
+
+<form method="post" action="{% url 'log:login' %}">
+    {% csrf_token %}
+    <div class="login-form-head">
+        <h4>Se Connecter</h4>
+        <p>Bienvenue sur la page de connexion à l'interface d'administration de votre site</p>
+    </div>
+    <div class="login-form-body">
+        <div class="input-fields-div autoMargin">
+            <div class="input-field">
+            </div>
+            <div id="passwordDiv" class="input-field scale-transition">
+            </div>
+        </div>
+        {{ form.email.errors }}
+        <div class="form-gp">
+            <label for="user_name"> Email </label>
+            <input id="user_name" type="text" class="validate" name="email">
+            <i class="ti-email"></i>
+        </div>
+        {{ form.password.errors }}
+        <div class="form-gp">
+            <label for="pass_word"> Mot de Passe </label>
+            <input id="pass_word" type="password" class="validate" name="password">
+            <a class="showPassword" onclick="showPassword()">
+                <i class="fa fa-eye" style="color: #10101a; margin-right: 20px" id="icon"></i>
+            </a>
+            <i class="ti-lock"></i>
+        </div>
+        <div class="row mb-4 rmber-area">
+            <div class="col-5">
+            </div>
+            <div class="col-7 text-right">
+                <a href="{% url 'log:passe_oublie' %}">
+                    Mot de passe Oublié ?
+                </a>
+            </div>
+        </div>
+        <div class="submit-btn-area">
+            <button id="form_submit" type="submit">Se Connecter <i class="ti-arrow-right"></i></button>
+        </div>
+        <div class="form-footer text-center mt-5">
+            <p class="text-muted">Vous n'avez pas de compte ? <a href="{% url 'log:register' %}">Créez votre compte</a></p>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function showPassword() {
+        var x = document.getElementById("pass_word");
+        var i = document.getElementById("icon");
+        if (x.type === "password") {
+            x.type      = "text";
+            i.className ="fa fa-eye-slash"
+        } else {
+            x.type = "password";
+            i.className = "fa fa-eye"
+        }
+    }
+</script>
+{% endblock content %}

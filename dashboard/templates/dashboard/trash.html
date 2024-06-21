@@ -1,0 +1,88 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<style>
+    .hover-zoom {
+        transition: transform 0.3s;
+    }
+    
+    .hover-zoom:hover {
+        transform: scale(1.05);
+    }
+    
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    
+    .card-body {
+        font-size: 1rem;
+    }
+    
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5em;
+    }
+    
+    .btn-outline-primary {
+        border-width: 2px;
+    }
+    
+    .container {
+        max-width: 1200px;
+    }
+    
+</style>
+<div class="container mt-5">
+    <h2>Corbeille</h2>
+    {% if is_notes_page %}
+        <p>Notes supprimées au cours des dernières 48 heures. Cliquez sur une note pour la restaurer.</p>
+        <div class="row">
+            {% for note in trashed_notes %}
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow-sm hover-zoom">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <a href="{% url 'restore-note' note.id %}" class="text-white text-decoration-none">
+                            {{ note.title }}
+                        </a>
+                        <span class="badge bg-danger">
+                            Supprimée le: {{ note.trash_date|date:"d/m/Y H:i" }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ note.content|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'notes' %}" class="btn btn-outline-primary">Retour aux Notes</a>
+        </div>
+    {% else %}
+        <p>Devoirs supprimés au cours des dernières 48 heures. Cliquez sur un devoir pour le restaurer.</p>
+        <div class="row">
+            {% for homework in trashed_homeworks %}
+<div class="col-md-4 mb-4">
+    <div class="card border-0 shadow-sm hover-zoom">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <a href="{% url 'restore-homework' homework.id %}" class="text-white text-decoration-none">
+                {{ homework.title }}
+            </a>
+            <span class="badge bg-danger">
+                Supprimée le: {{ homework.trash_date|date:"d/m/Y H:i" }}
+            </span>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ homework.description|truncatewords:20 }}</p>
+        </div>
+    </div>
+</div>
+{% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'homework' %}" class="btn btn-outline-primary">Retour aux Devoirs</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

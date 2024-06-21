@@ -1,0 +1,100 @@
+/* Styles pour le thème clair */
+body[data-theme="light"] {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body[data-theme="light"] .navbar, 
+body[data-theme="light"] footer {
+    background-color: #f8f9fa;
+}
+
+body[data-theme="light"] .navbar-nav .nav-link, 
+body[data-theme="light"] footer a {
+    color: #000000 !important;
+}
+
+
+
+body[data-theme="dark"] .navbar, 
+body[data-theme="dark"] footer {
+    background-color: #1f1f1f;
+}
+
+body[data-theme="dark"] .navbar-nav .nav-link, 
+body[data-theme="dark"] footer a {
+    color: #ffffff !important;
+}
+
+
+
+/* Styles pour le bouton dans le thème clair */
+body[data-theme="light"] #toggle-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Styles pour le bouton dans le thème sombre */
+body[data-theme="dark"] #toggle-theme {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.btn-outline-info {
+    color: #e0e0e0;
+    border-color: #e0e0e0;
+}
+
+.btn-outline-info:hover {
+    background-color: #e0e0e0;
+    color: #121212;
+}
+
+.form-control {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+.form-control:focus {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border: 1px solid #666;
+}
+
+.form-check-input {
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+}
+
+.text-danger {
+    color: #ff4d4d !important;
+}
+
+.badge {
+    background-color: #007bff;
+    color: #e0e0e0;
+}

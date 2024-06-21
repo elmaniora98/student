@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class='text-center container mt-5'>
+    <h2 class="mb-4">Search books and browse your favorite</h2>
+    <p class="lead">Just enter the search query to obtain the results</p>
+    <form action="" method="post" class="form-inline justify-content-center mb-4">
+        {% csrf_token %}
+        <div class="input-group">
+            {{ form.as_p }}
+            <div class="input-group-append">
+                <button class="btn btn-danger" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        {% for result in results %}
+        <div class="col-md-4 mb-4">
+            <a href="{% url 'book_detail' result.id %}" class="text-decoration-none">
+                <div class="card h-100 shadow-sm">
+                    <img class="card-img-top img-fluid" src="{{ result.thumbnail }}" alt="Book thumbnail">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ result.title }}</h5>
+                        {% if result.subtitle %}
+                        <h6 class="card-subtitle mb-2 text-muted">{{ result.subtitle }}</h6>
+                        {% endif %}
+                        {% if result.description %}
+                        <p class="card-text">{{ result.description|truncatewords:20 }}</p>
+                        {% endif %}
+                        {% if result.categories %}
+                        <p class="card-text">
+                            <strong>Category: </strong>
+                            {% for category in result.categories %}
+                            <span class="badge badge-primary">{{ category }}</span>
+                            {% endfor %}
+                        </p>
+                        {% endif %}
+                        {% if result.count %}
+                        <p class="card-text"><strong>Pages: </strong>{{ result.count }}</p>
+                        {% endif %}
+                        {% if result.rating %}
+                        <p class="card-text"><strong>Rating: </strong>{{ result.rating }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

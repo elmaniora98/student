@@ -1,0 +1,254 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Styles généraux */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f2f2f2; /* Couleur de fond générale */
+        color: #333; /* Couleur de texte par défaut */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Mode nuit */
+    body.dark-mode {
+        background-color: #333; /* Fond sombre */
+        color: #f2f2f2; /* Texte clair */
+    }
+
+    /* Conteneur principal */
+    .container {
+        max-width: 800px; /* Largeur maximale du contenu */
+        margin: 0 auto; /* Centrer le contenu */
+        padding: 20px;
+        background-color: #fff; /* Fond blanc pour le contenu */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+        border-radius: 8px; /* Coins arrondis */
+    }
+
+    /* Titre principal */
+    h2 {
+        font-size: 2.5rem; /* Taille du titre */
+        margin-bottom: 20px;
+    }
+
+    /* Formulaire de recherche */
+    form {
+        margin-bottom: 20px;
+    }
+
+    /* Bouton de soumission */
+    .btn {
+        background-color: #dc3545; /* Couleur de fond du bouton */
+        color: #fff; /* Couleur du texte du bouton */
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #c82333; /* Couleur de fond du bouton au survol */
+    }
+
+    /* Liens */
+    a {
+        color: #007bff; /* Couleur des liens */
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Carte d'article */
+    .card {
+        margin-top: 20px;
+        border: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+        border-radius: 8px; /* Coins arrondis */
+    }
+
+    .card-header {
+        background-color: #007bff; /* Couleur de fond de l'en-tête de la carte */
+        color: #fff; /* Couleur du texte de l'en-tête de la carte */
+        padding: 10px 20px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Sections de contenu */
+    .section {
+        margin-top: 20px;
+    }
+
+    /* Images */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Liste de groupe */
+    .list-group-item {
+        border: none;
+        padding: 10px 0;
+    }
+
+    /* Boutons de pagination */
+    .pagination {
+        margin-top: 20px;
+    }
+
+    .page-link {
+        color: #007bff; /* Couleur du texte des liens de pagination */
+    }
+
+    .page-link:hover {
+        color: #0056b3; /* Couleur du texte des liens de pagination au survol */
+    }
+
+    /* Mode nuit */
+    .dark-mode .container {
+        background-color: #444; /* Fond sombre pour le conteneur principal en mode nuit */
+        color: #f2f2f2; /* Texte clair en mode nuit */
+    }
+
+    .dark-mode .card-header {
+        background-color: #343a40; /* Fond sombre pour l'en-tête de la carte en mode nuit */
+    }
+
+    .dark-mode .btn {
+        background-color: #6c757d; /* Couleur de fond du bouton en mode nuit */
+    }
+
+    .dark-mode a {
+        color: #17a2b8; /* Couleur des liens en mode nuit */
+    }
+
+    .dark-mode .page-link {
+        color: #17a2b8; /* Couleur des liens de pagination en mode nuit */
+    }
+</style>
+
+
+<section class="text-center container mt-5">
+    <h2 class="mb-4">Search Articles in Wikipedia</h2>
+    <p class="mb-2">Just enter the search query to obtain the results</p>
+    <b>Enter without any space</b>
+    <form action="" method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            {{ form.text }}
+            <div class="input-group-append">
+                <input class="btn btn-danger" type="submit" value="Submit">
+            </div>
+        </div>
+    </form>
+
+    {% if popular_queries %}
+    <div class="mt-3">
+        <h5>Popular Searches:</h5>
+        <ul class="list-group">
+            {% for query in popular_queries %}
+            <li class="list-group-item">
+                <a href="?text={{ query.query }}">{{ query.query }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if user_searches %}
+    <div class="mt-3">
+        <h5>Your Recent Searches:</h5>
+        <ul class="list-group">
+            {% for search in user_searches %}
+            <li class="list-group-item">
+                <a href="?text={{ search.query }}">{{ search.query }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if title %}
+    <div class="card mt-4">
+        <a href="{{ link }}" target="_blank" class="text-decoration-none">
+            <div class="card-header">
+                <h2>{{ title }}</h2>
+                <h6 class="text-muted">{{ link }}</h6>
+            </div>
+        </a>
+        <div class="card-body">
+            <p class="card-text">{{ details }}</p>
+            {% if categories %}
+            <div class="mt-3">
+                <h5>Categories:</h5>
+                <ul class="list-group">
+                    {% for category in categories %}
+                    <li class="list-group-item">{{ category }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if content %}
+            <div class="mt-3">
+                <h5>Content:</h5>
+                <div class="pagination">
+                    <ul class="pagination">
+                        {% for section in content %}
+                        <li class="page-item">
+                            <a class="page-link" href="#section{{ forloop.counter0 }}">{{ forloop.counter }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="sections">
+                    {% for section in content %}
+                    <div id="section{{ forloop.counter0 }}" class="section">
+                        <h6>Section {{ forloop.counter }}</h6>
+                        <p>{{ section|safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if images %}
+            <div class="mt-3">
+                <h5>Images:</h5>
+                <div class="row">
+                    {% for image in images %}
+                    <div class="col-md-4">
+                        <img src="{{ image }}" class="img-fluid img-thumbnail" alt="Image from Wikipedia">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<script>
+$(function() {
+    $('#id_text').autocomplete({
+        source: "{% url 'autocomplete' %}",
+        minLength: 2,
+    });
+});
+</script>
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+    }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,120 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="display-4">Vos Notes</h2>
+    <p class="lead">Organisez vos notes efficacement.</p>
+
+    <!-- Barre de recherche -->
+    <form method="GET" action="">
+        <input type="text" name="search" class="form-control mb-4" placeholder="Rechercher une note par titre..." value="{{ request.GET.search }}">
+    </form>
+
+    <!-- Options de tri -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            Trier par:
+            <a href="?sort=title" class="btn btn-outline-primary">Titre</a>
+            <a href="?sort=date" class="btn btn-outline-primary">Date de Modification</a>
+        </div>
+        <div>
+            <!-- Icône de corbeille pour accéder à la corbeille -->
+            <a href="{% url 'trash' %}" class="text-danger" title="Voir la corbeille">
+                <i class="fas fa-trash-alt fa-2x"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Liste verticale des titres des notes -->
+    <div class="list-group mb-5">
+        {% for note in notes %}
+        <a href="{% url 'notes-detail' note.id %}" class="list-group-item list-group-item-action">
+            {{ note.title }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Cartes des Notes -->
+    <div class="row">
+        {% for note in notes %}
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm hover-zoom">
+                <div class="card-header text-center"> <!-- Titre centré -->
+                    {{ note.title }}
+                    <span class="text-muted" style="font-size: 0.8em;">
+                        Modifiée le: {{ note.updated_at|date:"d/m/Y H:i" }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    {{ note.description|slice:"0:100" }}... <!-- Description tronquée -->
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <!-- Modifier -->
+                    <a href="{% url 'edit-note' note.id %}" class="text-primary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <!-- Télécharger -->
+                    <a href="{% url 'download-note-as-text' note.id %}" class="text-success">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <!-- Corbeille -->
+                  <!-- Corbeille (petite poubelle) -->
+                <a href="{% url 'delete-note' note.id %}" class="text-danger">
+                    <i class="fas fa-trash"></i> <!-- Petite poubelle -->
+                </a>
+                <!-- Partager sur Facebook -->
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="text-primary" target="_blank">
+                    <i class="fab fa-facebook"></i> <!-- Partage sur Facebook -->
+                </a>
+                    </a>
+                    <!-- Partager sur WhatsApp -->
+                    <a href="https://wa.me/?text={{ note.description|slice:'0:100' }}..." class="text-success" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <!-- Partager par Gmail -->
+                    <a href="mailto:?subject={{ note.title }}&body={{ note.description|slice:'0:100' }}" class="text-danger">
+                        <i la fas fa-envelope"></i>
+                    </a>
+                    <!-- Partager sur Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="text-primary" target="_blank">
+                        <i la fab fa-facebook"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination avec numérotation des pages -->
+    <div class="text-center mt-4">
+        {% if notes.paginator.num_pages > 1 %}
+            {% for page_num in notes.paginator.page_range %}
+                {% if notes.number == page_num %}
+                    <span class="btn btn-primary active">{{ page_num }}</span> <!-- Page active -->
+                {% else %}
+                    <a href="?page={{ page_num }}" class="btn btn-outline-primary">{{ page_num }}</a> <!-- Autres pages -->
+                {% endif %}
+            {% endfor %}
+            <!-- Précédent et Suivant -->
+            {% if notes.has_previous %}
+                <a href="?page={{ notes.previous_page_number }}" class="btn btn-outline-primary">Précédent</a>
+            {% endif %}
+            {% if notes.has_next %}
+                <a href="?page={{ notes.next_page_number }}" class="btn btn-outline-primary">Suivant</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Formulaire pour créer des notes -->
+    <div class="mt-5">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-outline-info mt-3" type="submit">Créer une nouvelle note</button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

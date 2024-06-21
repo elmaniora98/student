@@ -1,0 +1,165 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mon Profil</h2>
+
+    <!-- Afficher les informations de profil -->
+    <div class="profile-summary">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <img src="{{ user.profile.profile_image.url }}" alt="Profil Image" class="img-thumbnail rounded-circle" style="width: 150px;">
+                <button class="btn btn-primary mt-2" data-toggle="modal" data-target="#change-photo-modal">Modifier la photo</button>
+            </div>
+            <div class="col-md-9">
+                <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Téléphone :</strong> {{ user.profile.phone_number }}</p>
+
+                <!-- Bouton pour modifier le nom -->
+                <button class="btn btn-outline-secondary mt-2" data-toggle="modal" data-target="#change-name-modal">Modifier le nom</button>
+                <!-- Bouton pour modifier le numéro de téléphone -->
+                <button class="btn btn-outline-secondary mt-2" data-toggle="modal" data-target="#change-phone-modal">Modifier le téléphone</button>
+                <!-- Bouton pour modifier le mot de passe -->
+                <button class="btn btn-outline-secondary mt-2" data-toggle="modal" data-target="#change-password-modal">Modifier le mot de passe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section de l'historique des activités -->
+    <div class="profile-history mt-4">
+        <h4>Historique des activités (dernier mois)</h4>
+        <ul class="list-group">
+            <!-- Afficher l'historique des actions de l'utilisateur -->
+            {% for action in user.profile.recent_actions %}
+                <li class="list-group-item">
+                    {{ action.description }} - {{ action.timestamp }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Section des devoirs à échéance proche -->
+    <div class="upcoming-homeworks mt-4">
+        <h4>Devoirs à rendre dans les 2 jours</h4>
+        <ul class="list-group">
+            <!-- Afficher les devoirs proches de leur date limite -->
+            {% for homework in user.profile.upcoming_homeworks %}
+                <li class="list-group-item">
+                    {{ homework.title }} - À rendre le {{ homework.due }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Modals pour les modifications -->
+    <!-- Modal pour changer le nom -->
+    <div class="modal fade" id="change-name-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le nom</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'change_name' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="first_name">Prénom</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Nom de famille</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour changer le numéro de téléphone -->
+    <div class="modal fade" id="change-phone-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le numéro de téléphone</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'change_phone' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label pour="phone_number">Numéro de téléphone</label>
+                            <input type="text" class="form-control" name="phone_number" value="{{ user.profile.phone_number }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour changer le mot de passe -->
+    <div class="modal fade" id="change-password-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le mot de passe</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'change_password' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label pour="old_password">Ancien mot de passe</label>
+                            <input type="password" class="form-control" name="old_password">
+                        </div>
+                        <div class="form-group">
+                            <label pour="new_password">Nouveau mot de passe</label>
+                            <input type="password" class="form-control" name="new_password">
+                        </div>
+                        <div class="form-group">
+                            <label pour="confirm_password">Confirmer le mot de passe</label>
+                            <input type="password" class="form-control" name="confirm_password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour changer la photo de profil -->
+    <div class="modal fade" id="change-photo-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier la photo de profil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'change_photo' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label pour="profile_image">Nouvelle photo de profil</label>
+                            <input type="file" class="form-control" name="profile_image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

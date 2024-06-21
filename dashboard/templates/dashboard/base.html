@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/images/icon/favicon.ico' %}"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Studentnote</title>
+    <!-- Liens vers les bibliothèques CSS et JS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+        /* Styles supplémentaires pour l'animation et les transitions */
+        .navbar-nav .nav-link {
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+            transform: scale(1.1);
+        }
+
+        #toggle-theme {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #toggle-theme:hover {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .navbar-brand {
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.1);
+        }
+
+        .badge-danger {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        footer .col-md-4 a {
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        footer .col-md-4 a:hover {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+
+        .suggestion-container {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .suggestion-container.active {
+            display: block;
+        }
+
+        .suggestion-container input,
+        .suggestion-container button {
+            margin-top: 10px;
+        }
+
+        /* Styles pour les thèmes jour/nuit */
+        body[data-theme='dark'] {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body[data-theme='dark'] a {
+            color: #ffc107;
+        }
+
+        body[data-theme='dark'] .navbar,
+        body[data-theme='dark'] footer {
+            background-color: #343a40;
+        }
+
+        body[data-theme='dark'] .form-control,
+        body[data-theme='dark'] .btn {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        body[data-theme='light'] {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        body[data-theme='light'] a {
+            color: #007bff;
+        }
+
+        body[data-theme='light'] .navbar,
+        body[data-theme='light'] footer {
+            background-color: #f8f9fa;
+        }
+
+        body[data-theme='light'] .form-control,
+        body[data-theme='light'] .btn {
+            background-color: #ffffff;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <i class="fas fa-home"></i> Studentnote Online
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+                    <!-- Bouton Jour/Nuit -->
+                    <button id="toggle-theme" class="btn btn-light">
+                        <i class="fas fa-adjust"></i> Mode Jour/Nuit
+                    </button>
+
+                    <!-- Liens du menu -->
+                    <ul class="navbar-nav">
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-user"></i>
+                                <!-- Avatar utilisateur -->
+                                {% if request.user.profile_image %}
+                                    <img src="{{ request.user.profile_image.url }}" class="rounded-circle" alt="Avatar" style="width: 24px; height: 24px;" />
+                                {% endif %}
+                                Profile
+                                <!-- Badge de notification -->
+                                {% if request.user.notifications_count > 0 %}
+                                    <span class="badge badge-danger">{{ request.user.notifications_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Options
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'books' %}">Livres</a>
+                                <a class="dropdown-item" href="{% url 'wiki' %}">Wikipédia</a>
+                                <a class="dropdown-item" href="#">Dictionnaire</a>
+                                <a class="dropdown-item" href="{% url 'youtube_search' %}">YouTube</a>
+                                <a class="dropdown-item" href="{% url 'todo-list' %}">To-Do</a>
+                                <a class="dropdown-item" href="{% url 'homework' %}">Devoirs</a>
+                                <a class="dropdown-item" href="{% url 'notes' %}">Notes</a>
+                                <a class="dropdown-item" href="{% url 'conversion' %}">Conversion</a>
+                            </div>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'log:logout' %}">Déconnexion</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'log:register' %}">Inscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'log:login' %}">Connexion</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Notification popup (référence pour la notification WhatsApp) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1000;">
+        <div class="toast" id="notification-toast" data-bs-autohide="true" data-bs-delay="3000">
+            <div class="toast-header">
+                <strong class="me-auto"><i class="fas fa-bell"></i> Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="notification-message">
+                Message envoyé avec succès!
+            </div>
+        </div>
+    </div>
+
+    <!-- Partie du template HTML pour suggestions -->
+    {% if request.user.is_authenticated %}
+    <script>
+        // Fonction pour afficher une notification
+        function showNotification(message) {
+            alert(message);
+        }
+
+        // Vérifier si l'utilisateur est sur la page d'accueil
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.pathname === '{% url 'home' %}') {
+                const suggestionContainer = document.createElement('div');
+                suggestionContainer.className = 'suggestion-container';
+                suggestionContainer.id = 'suggestion-container';
+
+                suggestionContainer.innerHTML = `
+                    <h5>Suggestions de rapprochement</h5>
+                    <input type="text" id="suggestion-input" class="form-control" placeholder="Entrez votre suggestion">
+                    <button id="suggestion-button" class="btn btn-primary">Envoyer</button>
+                `;
+
+                document.body.appendChild(suggestionContainer);
+
+                document.getElementById('suggestion-button').addEventListener('click', function() {
+                    const suggestion = document.getElementById('suggestion-input').value;
+                    if (suggestion) {
+                        fetch("{% url 'send_suggestion' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({ suggestion: suggestion })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erreur lors de l\'envoi de la suggestion.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('Suggestion envoyée avec succès!');
+                                document.getElementById('suggestion-input').value = '';
+                            } else {
+                                showNotification(data.error || 'Erreur lors de l\'envoi de la suggestion.');
+                            }
+                        })
+                        .catch(error => {
+                            showNotification(error.message);
+                        });
+                    } else {
+                        showNotification('Veuillez entrer une suggestion.');
+                    }
+                });
+
+                suggestionContainer.classList.add('active');
+            }
+        });
+    </script>
+{% endif %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Contactez-nous</h5>
+                    <p><a href="tel:+22898080398" class="text-white"><i class="fas fa-phone"></i>+228 98 08 03 98 </a></p>
+                    <p><a href="mailto:studentnote2005@gmail.com" class="text-white"><i class="fas fa-envelope"></i> studentnote2005@gmail.com</a></p>
+                    <p><a href="https://wa.me/+22898080398" class="text-white"><i class="fas fa-whatsapp"></i> WhatsApp: +228 98 08 03 98</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Suivez-nous</h5>
+                    <p><a href="#" class="text-white"><i class="fab fa-facebook"></i> Facebook</a></p>
+                    <p><a href="#" class="text-white"><i class="fab fa-twitter"></i> Twitter</a></p>
+                    <p><a href="#" class="text-white"><i class="fab fa-linkedin"></i> LinkedIn</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Informations légales</h5>
+                    <p><a href="#" class="text-white">Politique de confidentialité</a></p>
+                    <p><a href="#" class="text-white">Conditions d'utilisation</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('toggle-theme').addEventListener('click', function() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+        });
+
+        function showNotification(message) {
+            const toast = document.getElementById('notification-toast');
+            document.getElementById('notification-message').innerText = message;
+            const toastElement = new bootstrap.Toast(toast);
+            toastElement.show();
+        }
+
+        // Fonctionnalités supplémentaires
+        // Fonction pour afficher une alerte de bienvenue lors de la première visite
+        function showWelcomeAlert() {
+            if (!localStorage.getItem('visited')) {
+                showNotification('Bienvenue sur Studentnote Online!');
+                localStorage.setItem('visited', 'true');
+            }
+        }
+
+        // Exécution de la fonction d'alerte de bienvenue
+        showWelcomeAlert();
+
+        // Fonction pour afficher le temps actuel
+        function displayCurrentTime() {
+            const timeContainer = document.getElementById('current-time');
+            setInterval(() => {
+                const now = new Date();
+                timeContainer.innerText = now.toLocaleTimeString();
+            }, 1000);
+        }
+
+        // Ajout de l'élément d'affichage du temps actuel
+        const timeElement = document.createElement('div');
+        timeElement.id = 'current-time';
+        timeElement.style.position = 'fixed';
+        timeElement.style.bottom = '10px';
+        timeElement.style.right = '10px';
+        timeElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        timeElement.style.color = 'white';
+        timeElement.style.padding = '10px';
+        timeElement.style.borderRadius = '5px';
+        document.body.appendChild(timeElement);
+
+        // Exécution de la fonction d'affichage du temps actuel
+        displayCurrentTime();
+
+        // Fonction pour faire défiler vers le haut
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Ajout du bouton de défilement vers le haut
+        const scrollTopButton = document.createElement('button');
+        scrollTopButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        scrollTopButton.style.position = 'fixed';
+        scrollTopButton.style.bottom = '40px';
+        scrollTopButton.style.right = '20px';
+        scrollTopButton.style.backgroundColor = '#343a40';
+        scrollTopButton.style.color = 'white';
+        scrollTopButton.style.border = 'none';
+        scrollTopButton.style.padding = '10px';
+        scrollTopButton.style.borderRadius = '50%';
+        scrollTopButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        scrollTopButton.style.cursor = 'pointer';
+        scrollTopButton.style.display = 'none';
+        scrollTopButton.addEventListener('click', scrollToTop);
+        document.body.appendChild(scrollTopButton);
+
+        // Affichage du bouton de défilement vers le haut lors du défilement
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollTopButton.style.display = 'block';
+            } else {
+                scrollTopButton.style.display = 'none';
+            }
+        });
+
+    
+    </script>
+</body>
+
+</html>

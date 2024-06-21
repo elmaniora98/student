@@ -1,0 +1,23 @@
+{% extends "login/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Modifier vos informations
+{% endblock %}
+
+{% block head %}
+    Lustick LOGIN APP
+{% endblock %}
+
+{% block content %}
+    <h2 style="display: flex; align-items: center;">Modifier vos informations</h2><br>
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form|crispy }}
+        
+        <input type="submit" name="modifier" class="btn btn-primary btn-block" value="Modifier">
+        <!-- <a href="{% url 'log:modifpasse' %}" class="btn btn-secondary btn-block" >Modifier votre mot de passe</a> -->
+        <a href="{% url 'index' %}" class="btn btn-warning btn-block">Retour</a>
+    </form>
+{% endblock %}

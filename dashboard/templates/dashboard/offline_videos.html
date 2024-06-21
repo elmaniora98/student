@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body.bg-dark {
+        background-color: #121212 !important;
+        color: #fff !important;
+    }
+    
+    .card.bg-secondary {
+        background-color: #1e1e1e !important;
+    }
+    
+    .text-white {
+        color: #fff !important;
+    }
+    
+    .btn-light {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+    }
+    
+    .container {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    
+    h2 {
+        color: #f44336;
+    }
+    
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: scale(1.05);
+    }
+    
+    .btn {
+        transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .btn:hover {
+        background-color: #f44336;
+        color: #fff;
+    }
+    
+
+</style>
+<section class='container my-5'>
+    <h2>Vidéos Téléchargées</h2>
+    <div class="row">
+        {% for video in offline_videos %}
+        <div class="col-md-4 mb-4">
+            <div class="card video-card h-100">
+                <video class="card-img-top" controls>
+                    <source src="{{ video.file_path }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+                <div class="card-body">
+                    <h5 class="card-title">{{ video.title }}</h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

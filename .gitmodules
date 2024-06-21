@@ -1,0 +1,3 @@
+[submodule "studentnote"]
+	path = studentnote
+	url = https://github.com/elmaniora98/student.git

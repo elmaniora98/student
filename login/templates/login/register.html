@@ -1,0 +1,98 @@
+{% extends "login/base.html" %}
+{% load static %}
+
+{% block title%}
+    Créer un Compte
+{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+    function showPassword() {
+        var x = document.getElementById("pass_word1");
+        var y = document.getElementById("pass_word2");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+        if (y.type === "password") {
+            y.type = "text";
+        } else {
+            y.type = "password";
+        }
+    }
+</script>
+
+{% load crispy_forms_tags %}
+
+<!--Register-->
+<form method="post" action="{% url 'log:register' %}">
+    {% csrf_token %}
+    <div class="login-form-head">
+        <h4>Créer mon compte</h4>
+        <p class="text-center">
+            Bienvenue sur Lustick LOGIN APP...<br />
+            Veuillez créer votre compte pour avoir accès à l'interface !!!
+        </p>
+    </div>
+    <div class="login-form-body">
+        {{ form.first_name.errors }}
+        <div class="form-gp">
+            <label for="{{ form.first_name.id_for_label }}">Prénom(s)</label>
+            {{ form.first_name }}
+            <i class="ti-user"></i>
+        </div>
+        {{ form.last_name.errors }}
+        <div class="form-gp">
+            <label for="{{ form.last_name.id_for_label }}">Nom</label>
+            {{ form.last_name }}
+            <i class="ti-user"></i>
+        </div>
+        {{ form.contact.errors }}
+        <div class="form-gp">
+            <label for="{{ form.contact.id_for_label }}" >  Contact </label>
+            {{ form.contact }}
+            <i class="ti-mobile"></i>
+        </div>
+        {{ form.email.errors }}
+        <div class="form-gp">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            <i class="ti-email"></i>
+        </div>
+        {{ form.password1.errors }}
+        <div class="form-gp">
+            <label for="exampleInputPassword2">Password</label>
+            {{ form.password1 }}
+            <a class="showPassword" onclick="showPassword()">
+                <i class="fa fa-eye" style="color: white;"></i>
+            </a>
+            <i class="ti-lock"></i>
+        </div>
+        {{ form.password2.errors }}
+        <div class="form-gp">
+            <label for="pass_word2">Confirm Password</label>
+            {{ form.password2 }}
+            <a class="showPassword" onclick="showPassword()">
+                <i class="fa fa-eye" style="color: white;"></i>
+            </a>
+            <i class="ti-lock"></i>
+        </div>
+        <div class="submit-btn-area">
+            <button id="form_submit" type="submit">Créer <i class="ti-arrow-right"></i></button>
+            <!-- <div class="login-other row mt-4">
+                <div class="col-6">
+                    <a class="fb-login" href="#">Sign up with <i class="fa fa-facebook"></i></a>
+                </div>
+                <div class="col-6">
+                    <a class="google-login" href="#">Sign up with <i class="fa fa-google"></i></a>
+                </div>
+            </div> -->
+        </div>
+        <div class="form-footer text-center mt-5">
+            <p class="text-muted">Vous avez déjà un Compte ? <a href="{% url 'log:login' %}">Se Connecter</a></p>
+        </div>
+    </div>
+</form>
+{% endblock %}

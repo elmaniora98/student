@@ -1,0 +1,146 @@
+{% extends 'dashboard/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!-- templates/dashboard/todo_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .audio-controls button {
+            flex: 1;
+        }
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Todo List</h1>
+        <form id="todo-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Add Todo</button>
+        </form>
+        <hr>
+        <div class="todo-list">
+            {% for todo in todos %}
+            <div class="todo-item">
+                <div>
+                    <h5>{{ todo.title }}</h5>
+                    <p>Due: {{ todo.due_date }}</p>
+                    <p>Priority: {{ todo.get_priority_display }}</p>
+                    <p>Tags: {% for tag in todo.tags.all %}<span class="badge badge-info">{{ tag.name }}</span>{% endfor %}</p>
+                    <p><td>
+                        {% if todo.category %}
+                            {{ todo.category.name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td></p>
+                    <div class="audio-controls">
+                        {% if todo.audio %}
+                        <audio controls>
+                            <source src="{{ todo.audio.url }}" type="audio/mpeg">
+                        </audio>
+                        {% endif %}
+                    </div>
+                    <div class="video-controls">
+                        {% if todo.video %}
+                        <video width="320" height="240" controls>
+                            <source src="{{ todo.video.url }}" type="video/mp4">
+                        </video>
+                        {% endif %}
+                    </div>
+                    <div class="file-controls">
+                        {% if todo.file %}
+                        <a href="{{ todo.file.url }}" download class="btn btn-secondary">Download File</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'update_todo' todo.id %}" class="btn btn-sm btn-success">Toggle Complete</a>
+                    <button class="btn btn-sm btn-danger delete-todo" data-id="{{ todo.id }}">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Enregistrement audio
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById('start-record').addEventListener('click', function() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+                });
+        });
+
+        document.getElementById('stop-record').addEventListener('click', function() {
+            mediaRecorder.stop();
+            mediaRecorder.addEventListener('stop', () => {
+                const audioBlob = new Blob(audioChunks);
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+                
+                // Optionally, send the audioBlob to your server
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'audio.mp3');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "add_todo" %}', // Adjust URL if necessary
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                    }
+                });
+            });
+        });
+
+        $(document).on('click', '.delete-todo', function() {
+            var todoId = $(this).data('id');
+            $.ajax({
+                type: 'POST',
+                url: '{% url "delete_todo" todo_id %}'.replace('todo_id', todoId),
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock content %}

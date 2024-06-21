@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .container {
+        margin-top: 50px;
+    }
+    .card {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        border: 1px solid #333;
+        margin-top: 20px;
+    }
+    .card-header {
+        background-color: #333;
+        border-bottom: 1px solid #444;
+    }
+    .card-header h2 {
+        margin: 0;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .btn-primary {
+        background-color: #ff3d00;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #dd2c00;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ section.title }}</h2>
+        </div>
+        <div class="card-body">
+            <p>{{ section.content }}</p>
+            <a href="{% url 'wiki' %}" class="btn btn-primary mt-3">Back to Search</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "login/base.html" %}
+
+{% block title %}
+    Mot de passe oublié
+{% endblock %}
+
+{% block head %}
+    Lustick LOGIN APP | Mot de passe oublié
+{% endblock %}
+
+{% block content %}
+    <h2 style="display: flex; align-items: center;">Un nouveau mot de passe vous sera envoyé.</h2><br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+            {{ form.email }}
+        </div><br>
+        <input type="submit" name="envoyer" class="btn btn-primary btn-block" value="Envoyer">
+        <a href="{% url 'log:login' %}" class="btn btn-warning btn-block">Retour</a>
+    </form>
+{% endblock %}
