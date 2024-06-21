@@ -37,7 +37,7 @@ environ.Env.read_env(env_file=str(BASE_DIR / "studentnote" / ".env"))
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG=env.bool("DEBUG")
-ALLOWED_HOSTS = env.ALLOWED_HOSTS
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 YOUTUBE_API_KEY = env('YOUTUBE_API_KEY')
 
 # CSRF_TRUSTED_ORIGINS = [
