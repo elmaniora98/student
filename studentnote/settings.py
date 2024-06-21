@@ -36,17 +36,13 @@ env = environ.Env()
 environ.Env.read_env(env_file=str(BASE_DIR / "studentnote" / ".env"))
 
 SECRET_KEY = env("SECRET_KEY")
-DEBUG=True
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '6faa-2c0f-f0f8-65a-9940-1e-8360-7c5e-9c83.ngrok-free.app',
-]
+DEBUG=env.bool("DEBUG")
+ALLOWED_HOSTS = env.ALLOWED_HOSTS
 YOUTUBE_API_KEY = env('YOUTUBE_API_KEY')
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://6faa-2c0f-f0f8-65a-9940-1e-8360-7c5e-9c83.ngrok-free.app',
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://6faa-2c0f-f0f8-65a-9940-1e-8360-7c5e-9c83.ngrok-free.app',
+# ]
 # Application definition
 
 INSTALLED_APPS = [
