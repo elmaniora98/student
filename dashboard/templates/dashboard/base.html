@@ -154,7 +154,7 @@
                     <ul class="navbar-nav">
                         {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% {% url "log:index" %} %}">
+                            <a class="nav-link" href="{% url "log:index" %}">
                                 <i class="fas fa-user"></i>
                                 <!-- Avatar utilisateur -->
                                 {% if request.user.profile_image %}

@@ -187,9 +187,9 @@ LOGOUT_URL = "logout"
 
 SIGNUP_URL = "log:register"
 
-LOGIN_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL = "home"
 
-LOGOUT_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "home"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
