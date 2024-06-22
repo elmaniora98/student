@@ -13,7 +13,7 @@
     {% csrf_token %}
     <div class="login-form-head">
         <h4>Se Connecter</h4>
-        <p>Bienvenue sur la page de connexion à l'interface d'administration de votre site</p>
+        <p> <em> Bienvenue sur la page de connexion StudentNote </em> </p>
     </div>
     <div class="login-form-body">
         <div class="input-fields-div autoMargin">
@@ -50,7 +50,7 @@
             <button id="form_submit" type="submit">Se Connecter <i class="ti-arrow-right"></i></button>
         </div>
         <div class="form-footer text-center mt-5">
-            <p class="text-muted">Vous n'avez pas de compte ? <a href="{% url 'log:register' %}">Créez votre compte</a></p>
+            <p class="text-muted">Vous n'avez pas de compte ? br <a href="{% url 'log:register' %}">Créez votre compte</a></p>
         </div>
     </div>
 </form>
