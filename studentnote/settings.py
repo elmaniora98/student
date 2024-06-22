@@ -67,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ] 
 
 ROOT_URLCONF = 'studentnote.urls'
@@ -121,6 +122,9 @@ CACHES = {
         'LOCATION': 'unique-snowflake',
     }
 }
+
+# Utilisation de WhiteNoise pour servir les fichiers statiques
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #DATABASES = {
  #   'default':dj_database_url.parse(config('DATABASE_URL'))
