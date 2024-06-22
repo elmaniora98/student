@@ -110,53 +110,8 @@ def modifier_votre_mot_de_passe(request):
     else:
         form = FormulaireDeModificationDuMotDePasse()
     return render(request, 'login/modifier-votre-mot-de-passe.html', {'form': FormulaireDeModificationDuMotDePasse()})
-""""
-def mot_de_passe_oublie(request):
-    if request.method == 'POST':
-        form = FormulaireMotDePasseOublie(request.POST)
-        if form.is_valid():
-            caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\/|!@#$%?&*()_+ÀÇ¨È:É\"'{}[]-=àç^è;é.,"
-            mot_de_passe = ""
-            for c in range(16):
-                mot_de_passe += random.choice(caracteres)
-            
-            user = UserAccount.objects.get(email=form.cleaned_data['email'])
-            if user is None:
-                user.set_password(mot_de_passe)
-                user.save()
-                logout(request)
-                print(mot_de_passe)
-                send_mail('Réinitialisation de votre mot de passe.', 'Votre nouveau mot de passe est '+mot_de_passe+' veuillez le changer une fois connecté.', 'studentnote2005@gmail.com', [form.cleaned_data['email']], fail_silently=False,)
-                return redirect('log:login')
-            else:
-                print('Aucun compte enrégistré avec ce email')
-                form = FormulaireMotDePasseOublie()
-                return redirect('log:passe_oublie')
-                
-    else:
-        form = FormulaireMotDePasseOublie()
-    return render(request, 'login/mot-de-passe-oublie.html', {'form': FormulaireMotDePasseOublie()})
-"""
-"""
-def mot_de_passe_oublie(request):
-    if request.method == 'POST':
-        form = FormulaireMotDePasseOublie(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            try:
-                user = UserAccount.objects.get(email=email)
-                new_password = UserAccount.objects.make_random_password()  # Générer un nouveau mot de passe sécurisé
-                user.set_password(new_password)
-                user.save()
-                send_mail('Réinitialisation de votre mot de passe.', f'Votre nouveau mot de passe est {new_password}. Veuillez le changer une fois connecté.', 'pierreclaverulr@gmail.com', [email], fail_silently=False)
-                messages.success(request, "Un nouveau mot de passe a été envoyé à votre adresse e-mail.")
-                return redirect('log:login')
-            except UserAccount.DoesNotExist:
-                messages.error(request, "Aucun compte n'est enregistré avec cette adresse e-mail.")
-    else:
-        form = FormulaireMotDePasseOublie()
-    return render(request, 'login/mot-de-passe-oublie.html', {'form': form})
-"""
+
+
 #from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
