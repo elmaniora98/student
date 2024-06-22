@@ -124,7 +124,7 @@ CACHES = {
 }
 
 # Utilisation de WhiteNoise pour servir les fichiers statiques
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #DATABASES = {
  #   'default':dj_database_url.parse(config('DATABASE_URL'))
