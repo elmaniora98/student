@@ -46,9 +46,6 @@ urlpatterns = [
 
 
      path('books',views.books, name='books'),
-     path('books/<int:book_id>/', views.book_detail, name='book_detail'),
-
-    path('dictionary',views.dictionary, name='dictionary'),
 
     path('wiki/', views.wiki, name='wiki'),
     path('autocomplete/', views.autocomplete, name='autocomplete'),

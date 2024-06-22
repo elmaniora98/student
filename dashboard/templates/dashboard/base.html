@@ -137,7 +137,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'home' %}">
-                    <i class="fas fa-home"></i> Studentnote Online
+                    <i class="fas fa-home"></i> Accueil
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -147,7 +147,7 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                     <!-- Bouton Jour/Nuit -->
                     <button id="toggle-theme" class="btn btn-light">
-                        <i class="fas fa-adjust"></i> Mode Jour/Nuit
+                        <i class="fas fa-adjust"></i> Jour/Nuit
                     </button>
 
                     <!-- Liens du menu -->
@@ -176,7 +176,6 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{% url 'books' %}">Livres</a>
                                 <a class="dropdown-item" href="{% url 'wiki' %}">Wikipédia</a>
-                                <a class="dropdown-item" href="#">Dictionnaire</a>
                                 <a class="dropdown-item" href="{% url 'youtube_search' %}">YouTube</a>
                                 <a class="dropdown-item" href="{% url 'todo-list' %}">To-Do</a>
                                 <a class="dropdown-item" href="{% url 'homework' %}">Devoirs</a>
@@ -215,7 +214,7 @@
                 <strong class="me-auto"><i class="fas fa-bell"></i> Notification</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body" id="notification-message">
+            <div class="toast-body" id="message">
                 Message envoyé avec succès!
             </div>
         </div>
